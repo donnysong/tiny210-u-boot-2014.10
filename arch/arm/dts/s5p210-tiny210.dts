@@ -1,0 +1,27 @@
+/*
+ * Samsung's S5PC110-based Goni board device tree source
+ *
+ * Copyright (c) 2014 Google, Inc
+ *
+ * SPDX-License-Identifier:	GPL-2.0+
+ */
+
+/dts-v1/;
+
+#include "skeleton.dtsi"
+
+/ {
+	model = "Samsung s5p210 based on S5PC110";
+	compatible = "samsung,s5p210", "samsung,s5pc110";
+
+	aliases {
+		serial0 = "/serial@e2900000";
+		console = "/serial@e2900000";
+	};
+
+	serial@e2900000 {
+		compatible = "samsung,s5p210-uart";
+		reg = <0xe2900000 0x100>;
+		id = <0>;
+	};
+};

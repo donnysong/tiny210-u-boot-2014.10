@@ -60,7 +60,7 @@ void dram_init_banksize(void)
 #ifdef CONFIG_DISPLAY_BOARDINFO
 int checkboard(void)
 {
-	printf("Board:\tSMDKC100\n");
+	printf("Board:\ttiny210\n");
 	return 0;
 }
 #endif

@@ -18,24 +18,25 @@
  */
 #define CONFIG_SAMSUNG		1	/* in a SAMSUNG core */
 #define CONFIG_S5P		1	/* which is in a S5P Family */
-#define CONFIG_S5PC100		1	/* which is in a S5PC100 */
-#define CONFIG_SMDKC100		1	/* working with SMDKC100 */
+#define CONFIG_TINY210	1	/* working with SMDKC100 */
 
-#include <asm/arch-s5pc1xx/cpu.h>		/* get chip and board defs */
+/* get chip and board defs */
+#include <asm/arch/cpu.h>		
 
 #define CONFIG_ARCH_CPU_INIT
 
 #define CONFIG_DISPLAY_CPUINFO
 #define CONFIG_DISPLAY_BOARDINFO
+#define CONFIG_OF_EMBED  1
 
 /* input clock of PLL: SMDKC100 has 12MHz input clock */
-#define CONFIG_SYS_CLK_FREQ		12000000
+#define CONFIG_SYS_CLK_FREQ		24000000
 
 /* DRAM Base */
-#define CONFIG_SYS_SDRAM_BASE		0x30000000
+#define CONFIG_SYS_SDRAM_BASE		0x20000000
 
 /* Text Base */
-#define CONFIG_SYS_TEXT_BASE		0x34800000
+#define CONFIG_SYS_TEXT_BASE		0x23E00000
 
 #define CONFIG_SETUP_MEMORY_TAGS
 #define CONFIG_CMDLINE_TAG
@@ -54,6 +55,7 @@
 /*
  * select serial console configuration
  */
+#define CONFIG_SERIAL_MULTI     1
 #define CONFIG_SERIAL0			1	/* use SERIAL 0 on SMDKC100 */
 
 /* PWM */
@@ -74,7 +76,7 @@
 
 #define CONFIG_CMD_CACHE
 #define CONFIG_CMD_REGINFO
-#define CONFIG_CMD_ONENAND
+/*#define CONFIG_CMD_ONENAND*/
 #define CONFIG_CMD_ELF
 #define CONFIG_CMD_FAT
 #define CONFIG_CMD_MTDPARTS
@@ -159,7 +161,7 @@
  */
 #define CONFIG_SYS_LONGHELP		/* undef to save memory */
 #define CONFIG_SYS_HUSH_PARSER		/* use "hush" command parser	*/
-#define CONFIG_SYS_PROMPT		"SMDKC100 # "
+#define CONFIG_SYS_PROMPT		"Tiny210 # "
 #define CONFIG_SYS_CBSIZE	256	/* Console I/O Buffer Size */
 #define CONFIG_SYS_PBSIZE	384	/* Print Buffer Size */
 #define CONFIG_SYS_MAXARGS	16	/* max number of command args */
@@ -167,13 +169,18 @@
 #define CONFIG_SYS_BARGSIZE		CONFIG_SYS_CBSIZE
 /* memtest works on */
 #define CONFIG_SYS_MEMTEST_START	CONFIG_SYS_SDRAM_BASE
-#define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_SDRAM_BASE + 0x5e00000)
+#define CONFIG_SYS_MEMTEST_END		(CONFIG_SYS_SDRAM_BASE + 0x3E0000)
+#if 0
 #define CONFIG_SYS_LOAD_ADDR		CONFIG_SYS_SDRAM_BASE
+#endif
+#define CONFIG_SYS_LOAD_ADDR		0x21000000	/* default load address	*/
+#define SDRAM_BANK_SIZE		0x20000000	/* 256256 MB */
+#define PHYS_SDRAM_1_SIZE	SDRAM_BANK_SIZE
 
 /* SMDKC100 has 1 banks of DRAM, we use only one in U-Boot */
 #define CONFIG_NR_DRAM_BANKS	1
 #define PHYS_SDRAM_1		CONFIG_SYS_SDRAM_BASE	/* SDRAM Bank #1 */
-#define PHYS_SDRAM_1_SIZE	(128 << 20)	/* 0x8000000, 128 MB Bank #1 */
+/*#define PHYS_SDRAM_1_SIZE	(128 << 20)*/	/* 0x8000000, 128 MB Bank #1 */
 
 #define CONFIG_SYS_MONITOR_BASE	0x00000000
 
@@ -181,9 +188,8 @@
  * FLASH and environment organization
  */
 #define CONFIG_SYS_NO_FLASH		1
-
 #define CONFIG_SYS_MONITOR_LEN		(256 << 10)	/* 256 KiB */
-#define CONFIG_IDENT_STRING		" for SMDKC100"
+#define CONFIG_IDENT_STRING		" for s5p210"
 
 #if !defined(CONFIG_NAND_SPL) && (CONFIG_SYS_TEXT_BASE >= 0xc0000000)
 #define CONFIG_ENABLE_MMU
@@ -198,10 +204,25 @@
 /*-----------------------------------------------------------------------
  * Boot configuration
  */
+#if 0
 #define CONFIG_ENV_IS_IN_ONENAND	1
 #define CONFIG_ENV_SIZE			(128 << 10)	/* 128KiB, 0x20000 */
 #define CONFIG_ENV_ADDR			(256 << 10)	/* 256KiB, 0x40000 */
 #define CONFIG_ENV_OFFSET		(256 << 10)	/* 256KiB, 0x40000 */
+#endif
+
+#define CONFIG_GENERIC_MMC      1
+#define CONFIG_MMC          1
+#define CONFIG_S5P_MMC          1
+
+#define CONFIG_ENV_IS_IN_MMC        1
+#define CONFIG_SYS_MMC_ENV_DEV      0
+#define CONFIG_ENV_SIZE     0x4000  /* 16KB */
+#define RESERVE_BLOCK_SIZE              (512)
+#define BL1_SIZE                        (8 << 10) /*8 K reserved for BL1*/
+#define CONFIG_ENV_OFFSET               (RESERVE_BLOCK_SIZE + BL1_SIZE + ((16 + 512) * 1024))
+#define CONFIG_DOS_PARTITION        1
+
 
 #define CONFIG_USE_ONENAND_BOARD_INIT
 #define CONFIG_SAMSUNG_ONENAND		1
@@ -209,7 +230,10 @@
 
 #define CONFIG_DOS_PARTITION		1
 
+#if 0
 #define CONFIG_SYS_INIT_SP_ADDR	(CONFIG_SYS_LOAD_ADDR - 0x1000000)
+#endif
+#define CONFIG_SYS_INIT_SP_ADDR (CONFIG_SYS_LOAD_ADDR - GENERATED_GBL_DATA_SIZE)
 
 /*
  * Ethernet Contoller driver

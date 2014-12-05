@@ -256,7 +256,8 @@ __weak struct serial_device *default_serial_console(void)
 #ifdef CONFIG_OF_CONTROL
 	int index = 0;
 
-	if ((!config.base_addr) && (fdtdec_decode_console(&index, &config))) {
+	//if ((!config.base_addr) && (fdtdec_decode_console(&index, &config))) {
+	if ((fdtdec_decode_console(&index, &config))) {
 		debug("Cannot decode default console node\n");
 		return NULL;
 	}

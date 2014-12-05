@@ -1,18 +1,18 @@
-if TARGET_SMDK2410
+if TARGET_TINY210
 
 config SYS_CPU
-	default "arm920t"
+	default "armv7"
 
 config SYS_BOARD
-	default "smdk2410"
+	default "tiny210"
 
 config SYS_VENDOR
 	default "samsung"
 
 config SYS_SOC
-	default "s3c24x0"
+	default "s5p210"
 
 config SYS_CONFIG_NAME
-	default "smdk2410"
+	default "tiny210"
 
 endif
